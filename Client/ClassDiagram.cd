@@ -1,0 +1,44 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="ClientApp">
+    <Position X="3" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AEAAAACAAAAIAAAAAAAgAAAAACAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>ClientApp.h</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Field Name="InterfSize" />
+      <Field Name="InterfMatr" />
+      <Field Name="comm" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="TInterface" Collapsed="true">
+    <Position X="0.5" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAEAAAAAAAAAAAAYIAQAAAAAACAAEAAAQAAAAABAA=</HashCode>
+      <FileName>TInterface.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="TCommunicator">
+    <Position X="5.5" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAQACAAAAAAAAAAAAAgAAAAAACAAAAAAAAAA=</HashCode>
+      <FileName>C:\Users\hotki\source\repos\PW4\Communicate\TCommunicator.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="AdditionalInterface" Collapsed="true">
+    <Position X="0.5" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>gAAAgAAEAAgAAAAAAIAAAAAAAAAAAAAAAAAAAAQEAAA=</HashCode>
+      <FileName>TInterface.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="QApplication" Collapsed="true">
+    <Position X="3" Y="3.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>BAIAGYAAgAARYAAAMBISiAQgAEEEyAIaAEAwxgACAAA=</HashCode>
+      <FileName>C:\Qt\6.6.0\msvc2019_64\include\QtWidgets\qapplication.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>
