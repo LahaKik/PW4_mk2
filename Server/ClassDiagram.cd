@@ -1,2 +1,54 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<ClassDiagram /> 
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="Matrix">
+    <Position X="2" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>EAAAAgAAIAAAAAQIQAAAACAAAAAgAGCAAAAAAAAAAAA=</HashCode>
+      <FileName>Matrix.h</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Field Name="values" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="SquareMatrix">
+    <Position X="1.75" Y="6.5" Width="1.5" />
+    <InheritanceLine Type="Matrix">
+      <InheritanceModifierLabel ManuallyPlaced="true" ManuallySized="true">
+        <Position X="0.102" Y="0.177" Height="0.182" Width="0.588" />
+      </InheritanceModifierLabel>
+    </InheritanceLine>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAACAAAAAAAAAAAAAACIAAEAgAAAAAAA=</HashCode>
+      <FileName>SquareMatrix.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Rational">
+    <Position X="7.25" Y="1" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAGAEAAAAAAAAAAAgAQAAEAAAAABAAAAgAAgAAAA=</HashCode>
+      <FileName>Rational.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ServerApp">
+    <Position X="4.25" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAABAAAAAAAAAAAAAQCCAAAAAAAAAAAgAAAA=</HashCode>
+      <FileName>ServerApp.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="QCoreApplication" Collapsed="true">
+    <Position X="4.25" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>ABAHoDCBgIoEFAECTVCoQAAgAQBiQBIQRACWQKEqBCA=</HashCode>
+      <FileName>C:\Qt\6.6.0\msvc2019_64\include\QtCore\qcoreapplication.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Typedef Name="number" Collapsed="true">
+    <Position X="4.5" Y="4.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Number.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>

@@ -7,7 +7,7 @@ ClientApp::ClientApp(int argc, char** argv) : QApplication(argc, argv)
 
 	comm = new TCommunicator(params, this);
 
-	InterfMatr = new TInterface(2);
+	InterfMatr = new TInterface(2, 2);
 	InterfSize = new AdditionalInterface(InterfMatr, InterfMatr);
 	InterfSize->show();
 

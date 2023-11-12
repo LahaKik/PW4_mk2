@@ -2,27 +2,39 @@
 
 void ServerApp::recieve(QByteArray msg)
 {
-	qDebug() << "recieved";
+	qDebug() << "recieved:" << msg;
 	QString answer;
 	int message;
-	int size;
+	int height;
+	int width;
 	msg >> message;
-	msg >> size;
 	try
 	{
 		switch (message)
 		{
 		case DETERMINANT_REQUEST:
 		{
-			number* rez = CalcDeterminantAndRank(msg, size);
-			answer << QString().setNum(DETERMINANT_ANSWER) << QString().setNum(rez[0].decimal());
-			answer << QString().setNum((rez[1].decimal()));
-			delete[] rez;
+			msg >> height;
+			msg >> width;
+			if(height == width)
+			{
+				number* rez = CalcDeterminantAndRank(msg, width);
+				answer << QString().setNum(DETERMINANT_ANSWER) << QString().setNum(rez[0].decimal());
+				answer << QString().setNum((rez[1].decimal()));
+				delete[] rez;
+			}
+			else
+			{
+				int rez = CalcRank(msg, height, width);
+				answer << QString().setNum(DETERMINANT_ANSWER) << QString().setNum(rez);
+			}
 			break;
 		}
 		case TRANSPOSE_REQUEST:
 		{
-			answer << QString().setNum(TRANSPOSE_ANSWER) << QString().setNum(size) << Transpose(msg, size);
+			msg >> height;
+			msg >> width;
+			answer << QString().setNum(TRANSPOSE_ANSWER) << QString().setNum(width) << QString().setNum(height) << Transpose(msg, height, width);
 			break;
 		}
 
@@ -50,7 +62,7 @@ ServerApp::ServerApp(int argc, char** argv) : QCoreApplication(argc, argv)
 number* ServerApp::CalcDeterminantAndRank(QByteArray arr, uint size)
 {
 	number* rezult = new Rational[2]();
-	Matrix* matrix = CombineMatrix(arr, size);
+	SquareMatrix* matrix = CombineMatrix(arr, size);
 	
 	rezult[0] = matrix->Determinant();
 	rezult[1] = matrix->ComputeRank();
@@ -58,7 +70,7 @@ number* ServerApp::CalcDeterminantAndRank(QByteArray arr, uint size)
 	return rezult;
 }
 
-Matrix* ServerApp::CombineMatrix(QByteArray arr, uint size)
+SquareMatrix* ServerApp::CombineMatrix(QByteArray arr, uint size)
 {
 	number* values = new number[size * size];
 	uint k = 0;
@@ -72,7 +84,25 @@ Matrix* ServerApp::CombineMatrix(QByteArray arr, uint size)
 			k++;
 		}
 	}
-	Matrix* matrix = new Matrix(size, values);
+	SquareMatrix* matrix = new SquareMatrix(size, values);
+	return matrix;
+}
+
+Matrix* ServerApp::CombineMatrix(QByteArray arr, uint height, uint width)
+{
+	number* values = new number[height * width];
+	uint k = 0;
+	for (uint i = 0; i < height; i++)
+	{
+		for (uint j = 0; j < width; j++)
+		{
+			Rational temp;
+			arr >> temp;
+			values[k] = temp;
+			k++;
+		}
+	}
+	Matrix* matrix = new Matrix(height, width, values);
 	return matrix;
 }
 
@@ -83,4 +113,23 @@ QString ServerApp::Transpose(QByteArray arr, uint size)
 	QString rezult = matrix->ToQString();
 	delete matrix;
 	return rezult;
+}
+
+QString ServerApp::Transpose(QByteArray arr, uint height, uint width)
+{
+	if (height == width)
+		return Transpose(arr, width);
+	Matrix* matrix = CombineMatrix(arr, height, width);
+	matrix->SetTransposed();
+	QString rezult = matrix->ToQString();
+	delete matrix;
+	return rezult;
+}
+
+int ServerApp::CalcRank(QByteArray arr, uint height, uint width)
+{
+	Matrix* matrix = CombineMatrix(arr, height, width);
+	int rank = matrix->ComputeRank();
+	delete matrix;
+	return rank;
 }

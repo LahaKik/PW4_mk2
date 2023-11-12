@@ -5,7 +5,7 @@
 #include <qobject.h>
 #include <qudpsocket.h>
 
-#include "Matrix.h"
+#include "SquareMatrix.h"
 #include "../QtConsoleApplication1/TCommunicator.h"
 
 class ServerApp :
@@ -15,8 +15,11 @@ class ServerApp :
 
     TCommunicator *comm;
     number* CalcDeterminantAndRank(QByteArray, uint);
-    Matrix* CombineMatrix(QByteArray, uint);
+    SquareMatrix* CombineMatrix(QByteArray, uint);
+    Matrix* CombineMatrix(QByteArray, uint, uint);
     QString Transpose(QByteArray, uint);
+    QString Transpose(QByteArray, uint, uint);
+    int CalcRank(QByteArray, uint, uint);
 public:
     ServerApp(int, char**);
 

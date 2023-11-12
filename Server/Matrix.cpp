@@ -1,61 +1,41 @@
 #include "Matrix.h"
 
-Matrix::Matrix(Uint size) : size(size)
+Matrix::Matrix(uint height, uint width) : height(height), width(width)
 {
-
-	values = new number * [size];
-	for (Uint i = 0; i < size; i++)
+	values = new number * [height];
+	for (Uint i = 0; i < height; i++)
 	{
-		*(values + i) = new number[size];
-		for (Uint j = 0; j < size; j++)
+		*(values + i) = new number[width];
+		for (Uint j = 0; j < width; j++)
 		{
 			*(*(values + i) + j) = 1;
 		}
 	}
 }
 
-Matrix::Matrix(Uint size, number* inpNum) : size(size)
+Matrix::Matrix(uint height, uint width, number* arr) : height(height), width(width)
 {
-
-	values = new number * [size];
+	values = new number * [height];
 	int t = 0;
-	for (Uint i = 0; i < size; i++)
+	for (Uint i = 0; i < height; i++)
 	{
-		*(values + i) = new number[size];
-		for (Uint j = 0; j < size; j++)
+		*(values + i) = new number[width];
+		for (Uint j = 0; j < width; j++)
 		{
-			*(*(values + i) + j) = inpNum[t];
+			*(*(values + i) + j) = arr[t];
 			t++;
 		}
 	}
-	delete[] inpNum;
+	delete[] arr;
 }
 
 Matrix::~Matrix()
 {
-	for (Uint i = 0; i < size; i++)
+	for (Uint i = 0; i < height; i++)
 	{
 		delete[] * (values + i);
 	}
 	delete[] values;
-}
-
-number Matrix::Determinant()
-{
-	Matrix temp(size);
-	temp.copyMatrix(this);
-
-	applyGaussMethod();
-
-	number com = 1;
-	for (Uint i = 0; i < size; i++)
-	{
-		com *= values[i][i];
-	}
-
-	this->copyMatrix(&temp);
-
-	return com;
 }
 
 number Matrix::GetValue(Uint i, Uint j)
@@ -65,49 +45,38 @@ number Matrix::GetValue(Uint i, Uint j)
 
 void Matrix::copyMatrix(Matrix* target)
 {
-	for (Uint i = 0; i < size; i++)
+	for (Uint i = 0; i < height; i++)
 	{
-		for (Uint j = 0; j < size; j++)
+		for (Uint j = 0; j < width; j++)
 		{
 			*(*(values + i) + j) = target->GetValue(i, j);
 		}
 	}
 }
-
 void Matrix::SetTransposed()
 {
-	for (Uint i = 0; i < size; i++)
+	number** tempValue = new number * [width];
+	for (Uint i = 0; i < width; i++)
 	{
-		for (Uint j = i + 1; j < size; j++)
+		tempValue[i] = new number[height];
+		for (Uint j = 0; j < height; j++)
 		{
-			number temp = values[i][j];
-			values[i][j] = values[j][i];
-			values[j][i] = temp;
+			tempValue[i][j] = values[j][i];
 		}
 	}
-}
-
-void Matrix::applyGaussMethod()
-{
-	for (int k = 0; k < size - 1; k++)
+	for (Uint i = 0; i < height; i++)
 	{
-		for (int i = k + 1; i < size; i++)
-		{
-			number tmp;
-			tmp = -(values[i][k] / (number)values[k][k]);
-			for (int j = 0; j < size; j++)
-			{
-				number temp = values[k][j] * tmp;
-				values[i][j] += temp;
-
-			}
-		}
+		delete[] * (values + i);
 	}
+	delete[] values;
+	values = tempValue;
+	uint t = height;
+	height = width;
+	width = t;
 }
-
 int Matrix::ComputeRank()
 {
-	Matrix temp(size);
+	Matrix temp(height, width);
 	temp.copyMatrix(this);
 
 	applyGaussMethod();
@@ -115,7 +84,7 @@ int Matrix::ComputeRank()
 	//Print();
 	int rank = 0;
 
-	for (Uint i = 0; i < size; i++)
+	for (Uint i = 0; i < ((height > width) ? width : height); i++)
 	{
 		if (values[i][i] != 0)
 			rank++;
@@ -128,12 +97,30 @@ int Matrix::ComputeRank()
 	return rank;
 }
 
+void Matrix::applyGaussMethod()
+{
+	for (int k = 0; k < height - 1; k++)
+	{
+		for (int i = k + 1; i < height; i++)
+		{
+			number tmp;
+			tmp = -(values[i][k] / (number)values[k][k]);
+			for (int j = 0; j < width; j++)
+			{
+				number temp = values[k][j] * tmp;
+				values[i][j] += temp;
+
+			}
+		}
+	}
+}
+
 QString Matrix::ToQString()
 {
 	QString rezult;
-	for (Uint i = 0; i < size; i++)
+	for (Uint i = 0; i < height; i++)	
 	{
-		for (Uint j = 0; j < size; j++)
+		for (Uint j = 0; j < width; j++)
 		{
 			rezult << QString().setNum(values[i][j].upNum) << QString().setNum(values[i][j].downNum);
 		}
