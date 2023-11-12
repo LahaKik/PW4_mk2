@@ -16,6 +16,13 @@ ClientApp::ClientApp(int argc, char** argv) : QApplication(argc, argv)
 
 }
 
+ClientApp::~ClientApp()
+{
+	delete InterfMatr;
+	delete InterfSize;
+	delete comm;
+}
+
 void ClientApp::SendToServ(QString str)
 {
 	//qDebug() << "request sended" << str;
