@@ -16,6 +16,7 @@ class ClientApp :
     TCommunicator* comm;
 public:
     ClientApp(int, char**);
+    ~ClientApp();
 
 public slots:
     void SendToServ(QString);
