@@ -93,13 +93,11 @@
   <ItemGroup>
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Matrix.cpp" />
-    <ClCompile Include="SquareMatrix.cpp" />
     <ClCompile Include="Rational.cpp" />
     <ClCompile Include="ServerApp.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Matrix.h" />
-    <ClInclude Include="SquareMatrix.h" />
     <ClInclude Include="Number.h" />
     <ClInclude Include="Rational.h" />
     <QtMoc Include="ServerApp.h" />

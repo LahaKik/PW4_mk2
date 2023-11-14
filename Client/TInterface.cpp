@@ -1,63 +1,34 @@
 #include "TInterface.h"
 #include "../QtConsoleApplication1/TMessages.h"
 
-TInterface::TInterface(uint height, uint width, QWidget* parent) : height(height), width(width)
+TInterface::TInterface(uint size, QWidget* parent) : size(size)
 {
     setWindowTitle("Matrix");
-    setFixedSize(60 * width * Scale + 20, 50 * height * Scale + 30);
-    if(width > height)
+    setFixedSize(60 * size * Scale + 20, 50 * size * Scale + 30);
+    LEditArr = new QLineEdit * **[size];
+    for (uint i = 0; i < size; i++)
     {
-        LEditArr = new QLineEdit * **[width];
-        for (uint i = 0; i < width; i++)
+        *(LEditArr + i) = new QLineEdit * *[size];
+        for (uint j = 0; j < size; j++)
         {
-            *(LEditArr + i) = new QLineEdit * *[width];
-            for (uint j = 0; j < width; j++)
-            {
-                *(*(LEditArr + i) + j) = new QLineEdit * [2];
-                **(*(LEditArr + i) + j) = new QLineEdit("", this);
-                *(*(*(LEditArr + i) + j) + 1) = new QLineEdit("", this);
-                LEditArr[i][j][0]->setGeometry((30 * j + 10) * Scale, (40 * i + 10) * Scale, 15 * Scale, 15 * Scale);
-                LEditArr[i][j][1]->setGeometry((30 * j + 10) * Scale, (40 * i + 25) * Scale, 15 * Scale, 15 * Scale); 
-                if(i >= height)
-                {
-                    LEditArr[i][j][0]->hide();
-                    LEditArr[i][j][1]->hide();
-                }
-            }
-        }
-    }
-    else
-    {
-        LEditArr = new QLineEdit * **[height];
-        for (uint i = 0; i < height; i++)
-        {
-            *(LEditArr + i) = new QLineEdit * *[height];
-            for (uint j = 0; j < height; j++)
-            {
-                *(*(LEditArr + i) + j) = new QLineEdit * [2];
-                **(*(LEditArr + i) + j) = new QLineEdit("", this);
-                *(*(*(LEditArr + i) + j) + 1) = new QLineEdit("", this);
-                LEditArr[i][j][0]->setGeometry((30 * j + 10) * Scale, (40 * i + 10) * Scale, 15 * Scale, 15 * Scale);
-                LEditArr[i][j][1]->setGeometry((30 * j + 10) * Scale, (40 * i + 25) * Scale, 15 * Scale, 15 * Scale);
-                if (j >= width)
-                {
-                    LEditArr[i][j][0]->hide();
-                    LEditArr[i][j][1]->hide();
-                }
-            }
+            *(*(LEditArr + i) + j) = new QLineEdit * [2];
+            **(*(LEditArr + i) + j) = new QLineEdit("", this);
+            *(*(*(LEditArr + i) + j) + 1) = new QLineEdit("", this);
+            LEditArr[i][j][0]->setGeometry((30 * j + 10) * Scale, (40 * i + 10) * Scale, 15 * Scale, 15 * Scale);
+            LEditArr[i][j][1]->setGeometry((30 * j + 10) * Scale, (40 * i + 25) * Scale, 15 * Scale, 15 * Scale);
         }
     }
     CalculateBut = new QPushButton("Calculate", this);
-    CalculateBut->setGeometry((40 * width) * Scale, 10 * Scale, 50 * Scale, 30 * Scale);
+    CalculateBut->setGeometry((40 * size) * Scale, 10 * Scale, 50 * Scale, 30 * Scale);
 
     TransposeBut = new QPushButton("Transpose", this);
-    TransposeBut->setGeometry((40 * width) * Scale, 40 * Scale, 50 * Scale, 30 * Scale);
+    TransposeBut->setGeometry((40 * size) * Scale, 40 * Scale, 50 * Scale, 30 * Scale);
 
     DeterminantLabel = new QLabel("Determinant:", this);
-    DeterminantLabel->setGeometry(15 * Scale, (40 * height + 20) * Scale, 90 * Scale, 20 * Scale);
+    DeterminantLabel->setGeometry(15 * Scale, (40 * size + 20) * Scale, 90 * Scale, 20 * Scale);
 
     RankLabel = new QLabel("Rank:", this);
-    RankLabel->setGeometry(15 * Scale, (40 * height) * Scale, 30 * Scale, 20 * Scale);
+    RankLabel->setGeometry(15 * Scale, (40 * size) * Scale, 30 * Scale, 20 * Scale);
 
     connect(CalculateBut, SIGNAL(pressed()), this, SLOT(formRequest()));
     connect(TransposeBut, SIGNAL(pressed()), this, SLOT(formRequest()));
@@ -65,31 +36,16 @@ TInterface::TInterface(uint height, uint width, QWidget* parent) : height(height
 
 TInterface::~TInterface()
 {
-    if(width > height)
+
+    for (uint i = 0; i < size; i++)
     {
-        for (uint i = 0; i < width; i++)
+        for (uint j = 0; j < size; j++)
         {
-            for (uint j = 0; j < width; j++)
-            {
-                delete** (*(LEditArr + i) + j);
-                delete* (*(*(LEditArr + i) + j) + 1);
-                delete[] * (*(LEditArr + i) + j);
-            }
-            delete[] * (LEditArr + i);
+            delete** (*(LEditArr + i) + j);
+            delete* (*(*(LEditArr + i) + j) + 1);
+            delete[] * (*(LEditArr + i) + j);
         }
-    }
-    else
-    {
-        for (uint i = 0; i < height; i++)
-        {
-            for (uint j = 0; j < height; j++)
-            {
-                delete** (*(LEditArr + i) + j);
-                delete* (*(*(LEditArr + i) + j) + 1);
-                delete[] * (*(LEditArr + i) + j);
-            }
-            delete[] * (LEditArr + i);
-        }
+        delete[] * (LEditArr + i);
     }
     delete[] LEditArr;
     delete CalculateBut;
@@ -100,44 +56,30 @@ TInterface::~TInterface()
 
 void TInterface::reception(QString str)
 {
-    qDebug() << str;
     int message;
     str >> message;
     switch (message)
     {
     case DETERMINANT_ANSWER:
     {
-        if(height == width)
-        {
-            double det;
-            int rank;
-            str >> det;
-            str >> rank;
+        double det;
+        int rank;
+        str >> det;
+        str >> rank;
 
-            DeterminantLabel->setText("Determinant:" + QString::fromStdString(std::to_string(det)));
-            RankLabel->setText("Rank:" + QString::fromStdString(std::to_string(rank)));
-        }
-        else
-        {
-            int rank;
-            str >> rank;
-            RankLabel->setText("Rank:" + QString::fromStdString(std::to_string(rank)));
-        }
+        DeterminantLabel->setText("Determinant:" + QString::fromStdString(std::to_string(det)));
+        RankLabel->setText("Rank:" + QString::fromStdString(std::to_string(rank)));
         break;
     }
     case TRANSPOSE_ANSWER:
     {
-        int Height;
-        int Width;
-        str >> Height;
-        str >> Width;
-        for (uint i = 0; i < ((width > height) ? width : height); i++)
+        int Size;
+        str >> Size;
+        if(Size == size)
         {
-            for (uint j = 0; j < ((width > height) ? width : height); j++)
+            for (uint i = 0; i < Size; i++)
             {
-                LEditArr[i][j][0]->show();
-                LEditArr[i][j][1]->show();
-                if (i < Height && j < Width)
+                for (uint j = 0; j < Size; j++)
                 {
                     int tmpUP;
                     int tmpDOWN;
@@ -146,21 +88,8 @@ void TInterface::reception(QString str)
                     LEditArr[i][j][0]->setText(QString::fromStdString(std::to_string(tmpUP)));
                     LEditArr[i][j][1]->setText(QString::fromStdString(std::to_string(tmpDOWN)));
                 }
-                else
-                {
-                    LEditArr[i][j][0]->hide();
-                    LEditArr[i][j][1]->hide();
-                }
             }
         }
-        height = Height;
-        width = Width;
-        setFixedSize(60 * width * Scale + 20, 50 * height * Scale + 30);
-        CalculateBut->setGeometry((40 * width) * Scale, 10 * Scale, 50 * Scale, 30 * Scale);
-        TransposeBut->setGeometry((40 * width) * Scale, 40 * Scale, 50 * Scale, 30 * Scale);
-        DeterminantLabel->setGeometry(15 * Scale, (40 * height + 20) * Scale, 90 * Scale, 20 * Scale);
-        RankLabel->setGeometry(15 * Scale, (40 * height) * Scale, 30 * Scale, 20 * Scale);
-
         break;
     }
     case ERROR_MESSAGE:
@@ -184,11 +113,10 @@ void TInterface::formRequest()
         msg << QString().setNum(DETERMINANT_REQUEST);
     else if (from == TransposeBut)
         msg << QString().setNum(TRANSPOSE_REQUEST);
-    msg << QString().setNum(height);
-    msg << QString().setNum(width);
-    for (uint i = 0; i < height; i++)
+    msg << QString().setNum(size);
+    for (uint i = 0; i < size; i++)
     {
-        for (uint j = 0; j < width; j++)
+        for (uint j = 0; j < size; j++)
         {
             msg << LEditArr[i][j][0]->text();
             msg << LEditArr[i][j][1]->text();
@@ -202,27 +130,23 @@ void TInterface::formRequest()
 AdditionalInterface::AdditionalInterface(TInterface* fc, QWidget* parent) : fc(fc)
 {
     setWindowTitle("Size");
-    setFixedSize(200, 100);
+    setFixedSize(180, 100);
 
     SizeLabel = new QLabel("Enter size:", this);
-    SizeLabel->setGeometry(35, 10, 55, 20);
+    SizeLabel->setGeometry(45, 10, 55, 20);
 
-    HeightValue = new QLineEdit("", this);
-    HeightValue->setGeometry(90, 10, 30, 20);
-
-    WidthValue = new QLineEdit("", this);
-    WidthValue->setGeometry(125, 10, 30, 20);
+    SizeValue = new QLineEdit("", this);
+    SizeValue->setGeometry(105, 10, 30, 20);
 
     ConfirmBut = new QPushButton("Continue", this);
-    ConfirmBut->setGeometry(5, 45, 190, 45);
+    ConfirmBut->setGeometry(5, 45, 170, 45);
 
     connect(ConfirmBut, SIGNAL(pressed()), this, SLOT(Confirm()));
-    connect(WidthValue, SIGNAL(editingFinished()), this, SLOT(Confirm()));
 }
 
 void AdditionalInterface::Confirm()
 {
-    if (HeightValue->text().toUInt() > 15 || WidthValue->text().toUInt() > 15)
+    if (SizeValue->text().toUInt() > 15)
     {
         QMessageBox warning = QMessageBox(this);
         warning.setText("Value is too much or negative");
@@ -230,11 +154,10 @@ void AdditionalInterface::Confirm()
         warning.exec();
         return;
     }
-    height = HeightValue->text().toUInt();
-    width = WidthValue->text().toUInt();
+    size = SizeValue->text().toUInt();
 
 
-    fc = new TInterface(height, width);
+    fc = new TInterface(size);
     emit ChangedSize(fc);
     fc->show();
     this->hide();

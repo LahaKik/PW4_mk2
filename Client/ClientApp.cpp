@@ -7,20 +7,13 @@ ClientApp::ClientApp(int argc, char** argv) : QApplication(argc, argv)
 
 	comm = new TCommunicator(params, this);
 
-	InterfMatr = new TInterface(2, 2);
+	InterfMatr = new TInterface(2);
 	InterfSize = new AdditionalInterface(InterfMatr, InterfMatr);
 	InterfSize->show();
 
 	connect(InterfSize, SIGNAL(ChangedSize(TInterface*)), this, SLOT(Reconnect(TInterface*)));
 	connect(comm, SIGNAL(recieved(QByteArray)), this, SLOT(RecievefromServ(QByteArray)));
 
-}
-
-ClientApp::~ClientApp()
-{
-	delete InterfMatr;
-	delete InterfSize;
-	delete comm;
 }
 
 void ClientApp::SendToServ(QString str)

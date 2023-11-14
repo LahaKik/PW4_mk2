@@ -15,12 +15,12 @@ class TInterface :
         QLineEdit**** LEditArr;
     QPushButton* CalculateBut, * TransposeBut;
     QLabel* DeterminantLabel, * RankLabel;
-    uint height;
-    uint width;
+    uint size;
     const float Scale = 1.5;
 
+    //number* GetValues();
 public:
-    TInterface(uint, uint, QWidget* parent = nullptr);
+    TInterface(uint, QWidget* parent = nullptr);
 
     ~TInterface();
 
@@ -42,9 +42,8 @@ class AdditionalInterface
     Q_OBJECT
         QPushButton* ConfirmBut;
     QLabel* SizeLabel;
-    QLineEdit* HeightValue, * WidthValue;
-    uint height;
-    uint width;
+    QLineEdit* SizeValue;
+    uint size;
     TInterface* fc;
 public:
     AdditionalInterface(TInterface*, QWidget* parent = nullptr);
@@ -53,8 +52,7 @@ public:
     {
         delete ConfirmBut;
         delete SizeLabel;
-        delete HeightValue;
-        delete WidthValue;
+        delete SizeValue;
         delete fc;
     }
 public slots:
