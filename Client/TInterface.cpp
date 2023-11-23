@@ -1,5 +1,5 @@
 #include "TInterface.h"
-#include "../QtConsoleApplication1/TMessages.h"
+
 
 TInterface::TInterface(uint height, uint width, QWidget* parent) : height(height), width(width)
 {
@@ -59,8 +59,23 @@ TInterface::TInterface(uint height, uint width, QWidget* parent) : height(height
     RankLabel = new QLabel("Rank:", this);
     RankLabel->setGeometry(15 * Scale, (40 * height) * Scale, 30 * Scale, 20 * Scale);
 
+    RationalNum = new QRadioButton("Rational", this);
+    RationalNum->setGeometry((40 * width) * Scale, 70 * Scale, 50 * Scale, 15 * Scale);
+
+    RealNum = new QRadioButton("Real", this);
+    RealNum->setGeometry((40 * width) * Scale, 85 * Scale, 50 * Scale, 15 * Scale);
+
+    ComplexNum = new QRadioButton("Complex", this);
+    ComplexNum->setGeometry((40 * width) * Scale, 100 * Scale, 50 * Scale, 15 * Scale);
+
+    RationalNum->setChecked(true);
+
     connect(CalculateBut, SIGNAL(pressed()), this, SLOT(formRequest()));
     connect(TransposeBut, SIGNAL(pressed()), this, SLOT(formRequest()));
+
+    connect(RationalNum, SIGNAL(clicked()), this, SLOT(RedrowFilds()));
+    connect(RealNum, SIGNAL(clicked()), this, SLOT(RedrowFilds()));
+    connect(ComplexNum, SIGNAL(clicked()), this, SLOT(RedrowFilds()));
 }
 
 TInterface::~TInterface()
@@ -96,6 +111,67 @@ TInterface::~TInterface()
     delete TransposeBut;
     delete DeterminantLabel;
     delete RankLabel;
+    delete RationalNum;
+    delete RealNum;
+    delete ComplexNum;
+}
+
+void TInterface::RedrowFilds()
+{
+    if ((QRadioButton*)sender() == RationalNum)
+    {
+        typeNum = RATIONAL;
+        for (uint i = 0; i < ((width > height) ? width : height); i++)
+        {
+            for (uint j = 0; j < ((width > height) ? width : height); j++)
+            {
+                LEditArr[i][j][0]->show();
+                LEditArr[i][j][1]->show();
+                LEditArr[i][j][0]->setGeometry((30 * j + 10) * Scale, (40 * i + 10) * Scale, 15 * Scale, 15 * Scale);
+                LEditArr[i][j][1]->setGeometry((30 * j + 10) * Scale, (40 * i + 25) * Scale, 15 * Scale, 15 * Scale);
+                if (i >= height || j >= width)
+                {
+                    LEditArr[i][j][0]->hide();
+                    LEditArr[i][j][1]->hide();
+                }
+            }
+        }
+    }
+    else if ((QRadioButton*)sender() == RealNum)
+    {
+        typeNum = REAL;
+        for (uint i = 0; i < ((width > height) ? width : height); i++)
+        {
+            for (uint j = 0; j < ((width > height) ? width : height); j++)
+            {
+                LEditArr[i][j][0]->show();
+                LEditArr[i][j][1]->hide();
+                LEditArr[i][j][0]->setGeometry((30 * j + 10) * Scale, (40 * i + 10) * Scale, 15 * Scale, 15 * Scale);
+                LEditArr[i][j][1]->setGeometry((30 * j + 10) * Scale, (40 * i + 25) * Scale, 15 * Scale, 15 * Scale);
+                if (i >= height || j >= width)
+                {
+                    LEditArr[i][j][0]->hide();
+                }
+            }
+        }
+    }
+    else if ((QRadioButton*)sender() == ComplexNum)
+    {
+        typeNum = COMPLEX;
+        for (uint i = 0; i < ((width > height) ? width : height); i++)
+        {
+            for (uint j = 0; j < ((width > height) ? width : height); j++)
+            {
+                LEditArr[i][j][0]->show();
+                LEditArr[i][j][1]->hide();
+                LEditArr[i][j][0]->setGeometry((30 * j + 10) * Scale, (40 * i + 10) * Scale, 29 * Scale, 15 * Scale);
+                if (i >= height || j >= width)
+                {
+                    LEditArr[i][j][0]->hide();
+                }
+            }
+        }
+    }
 }
 
 void TInterface::reception(QString str)
@@ -121,6 +197,7 @@ void TInterface::reception(QString str)
         {
             int rank;
             str >> rank;
+
             RankLabel->setText("Rank:" + QString::fromStdString(std::to_string(rank)));
         }
         break;
@@ -160,7 +237,6 @@ void TInterface::reception(QString str)
         TransposeBut->setGeometry((40 * width) * Scale, 40 * Scale, 50 * Scale, 30 * Scale);
         DeterminantLabel->setGeometry(15 * Scale, (40 * height + 20) * Scale, 90 * Scale, 20 * Scale);
         RankLabel->setGeometry(15 * Scale, (40 * height) * Scale, 30 * Scale, 20 * Scale);
-
         break;
     }
     case ERROR_MESSAGE:
@@ -184,6 +260,8 @@ void TInterface::formRequest()
         msg << QString().setNum(DETERMINANT_REQUEST);
     else if (from == TransposeBut)
         msg << QString().setNum(TRANSPOSE_REQUEST);
+
+    msg << QString().setNum(typeNum);
     msg << QString().setNum(height);
     msg << QString().setNum(width);
     for (uint i = 0; i < height; i++)
@@ -197,8 +275,7 @@ void TInterface::formRequest()
     emit request(msg);
 }
 
-
-
+#pragma warning(disable:26495)
 AdditionalInterface::AdditionalInterface(TInterface* fc, QWidget* parent) : fc(fc)
 {
     setWindowTitle("Size");
@@ -232,7 +309,6 @@ void AdditionalInterface::Confirm()
     }
     height = HeightValue->text().toUInt();
     width = WidthValue->text().toUInt();
-
 
     fc = new TInterface(height, width);
     emit ChangedSize(fc);

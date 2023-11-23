@@ -16,12 +16,12 @@ void Rational::MakeIrreducible()
 	Uint i = 0;
 	while (UPtmp > 1 || DOWNtmp > 1)
 	{
-		while (UPtmp > 1 && (double)UPtmp / simpleNum[i] == ((int)(UPtmp / simpleNum[i])))
+		while (UPtmp > 1 && UPtmp % simpleNum[i] == 0)
 		{
 			simpleDevidersUP.push_back(simpleNum[i]);
 			UPtmp /= simpleNum[i];
 		}
-		while (DOWNtmp > 1 && (double)DOWNtmp / simpleNum[i] == ((int)(DOWNtmp / simpleNum[i])))
+		while (DOWNtmp > 1 && DOWNtmp % simpleNum[i] == 0)
 		{
 			simpleDevidersDOWN.push_back(simpleNum[i]);
 			DOWNtmp /= simpleNum[i];
@@ -110,4 +110,23 @@ QByteArray& operator>> (QByteArray& arr, Rational& num)
 		arr = arr.right(arr.length() - IndSep - 1);
 	}
 	return arr;
+}
+
+QString& operator<< (QString& str, Rational& num)
+{
+	str.append(QString().setNum(num.upNum));
+	str.append(TMessageSeparator);
+	str.append(QString().setNum(num.downNum));
+	str.append(TMessageSeparator);
+	return str;
+}
+
+QString Rational::ToQString()
+{
+	QString str;
+	str.append(QString().setNum(upNum));
+	str.append(TMessageSeparator);
+	str.append(QString().setNum(downNum));
+	str.append(TMessageSeparator);
+	return str;
 }

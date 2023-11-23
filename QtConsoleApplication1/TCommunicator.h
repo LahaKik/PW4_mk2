@@ -20,7 +20,7 @@ class TCommunicator :
     TCommParams params;
 public:
     TCommunicator(TCommParams&, QObject* parent = nullptr);
-    bool IsReady() { return ready; }
+    bool IsReady() const { return ready; }
 
 public slots:
     void send(QByteArray);

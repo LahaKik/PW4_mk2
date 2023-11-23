@@ -16,9 +16,18 @@ enum ServerMessage
 	ERROR_MESSAGE = 99
 };
 
+enum TypeNum
+{
+	RATIONAL,
+	REAL,
+	COMPLEX
+};
+
 static const QChar TMessageSeparator = ';';
 
 QString& operator<< (QString&, const QString&);
 QString& operator>> (QString&, int&);
 QString& operator>> (QString&, double&);
 QByteArray& operator>> (QByteArray&, int&);
+QByteArray& operator>> (QByteArray&, double&);
+

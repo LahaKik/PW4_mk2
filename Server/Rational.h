@@ -148,13 +148,13 @@ public:
 		return true;
 	}
 
-	friend std::ostream& operator<< (std::ostream& strm, Rational& const num)
+	friend std::ostream& operator<< (std::ostream& strm, Rational& num)
 	{
 		strm << num.upNum << "/" << num.downNum;
 		return strm;
 	}
 
-	friend std::istream& operator>> (std::istream& strm, Rational& const num)
+	friend std::istream& operator>> (std::istream& strm, Rational& num)
 	{
 		strm >> num.upNum;
 		strm >> num.downNum;
@@ -182,6 +182,7 @@ public:
 	friend QByteArray& operator>> (QByteArray&, Rational&);
 	friend QString& operator<< (QString&, Rational&);
 
-	double decimal() { return (double)upNum / downNum; }
+	double decimal() const { return (double)upNum / downNum; }
+	QString ToQString();
 };
 

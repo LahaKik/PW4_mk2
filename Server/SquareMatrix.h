@@ -2,32 +2,53 @@
 #include "Matrix.h"
 #include <iostream>
 
-class SquareMatrix : public Matrix
+template<class number>
+class SquareMatrix : public Matrix<number>
 {
 public:
-	SquareMatrix(Uint);
-	SquareMatrix(Uint, number*);
+	SquareMatrix(uint size) : Matrix<number>(size, size) {}
+	SquareMatrix(uint size, number* inpNum) : Matrix<number>(size, size, inpNum) {}
 
 	number Determinant();
-	Uint GetSize()
+	uint GetSize()
 	{
-		return width;
+		return Matrix<number>::width;
 	}
 	
 	SquareMatrix& operator= (SquareMatrix& right)
 	{
 		if (this == &right)
 			return *this;
-		width = right.GetSize();
-		values = new number * [width];
-		for (Uint i = 0; i < width; i++)
+		Matrix<number>::width = right.GetSize();
+		Matrix<number>::values = new number * [Matrix<number>::width];
+		for (uint i = 0; i < Matrix<number>::width; i++)
 		{
-			*(values + i) = new number[width];
-			for (Uint j = 0; j < width; j++)
+			*(Matrix<number>::values + i) = new number[Matrix<number>::width];
+			for (uint j = 0; j < Matrix<number>::width; j++)
 			{
-				*(*(values + i) + j) = right.GetValue(i, j);
+				*(*(Matrix<number>::values + i) + j) = Matrix<number>::right.GetValue(i, j);
 			}
 		}
 		return *this;
 	}
 };
+
+
+template<class number>
+number SquareMatrix<number>::Determinant()
+{
+	SquareMatrix temp(Matrix<number>::width);
+	temp.copyMatrix(this);
+
+	Matrix<number>::applyGaussMethod();
+
+	number com = 1;
+	for (uint i = 0; i < Matrix<number>::width; i++)
+	{
+		com *= Matrix<number>::values[i][i];
+	}
+
+	this->copyMatrix(&temp);
+
+	return com;
+}
