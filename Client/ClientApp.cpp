@@ -18,7 +18,6 @@ ClientApp::ClientApp(int argc, char** argv) : QApplication(argc, argv)
 
 ClientApp::~ClientApp()
 {
-	delete InterfMatr;
 	delete InterfSize;
 	delete comm;
 }

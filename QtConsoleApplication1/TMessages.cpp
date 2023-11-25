@@ -50,3 +50,11 @@ QByteArray& operator>> (QByteArray& arr, double& num)
 	}
 	return arr;
 }
+
+QString& operator<<(QString& str, const double& num)
+{
+	str.append(QString().setNum(num));
+	str.append(TMessageSeparator);
+
+	return str;
+}

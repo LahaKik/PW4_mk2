@@ -104,6 +104,6 @@ int ServerApp::CalcRank(QByteArray arr, uint height, uint width)
     return rank;
 }
 
-//template<> QString& operator<< (QString&, Matrix<double>&);
+
 //template<> QString& operator<< (QString&, Matrix<TComplex>&);
 //template<> QString& operator<< (QString&, Matrix<Rational>&);

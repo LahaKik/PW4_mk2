@@ -180,7 +180,7 @@ public:
 	}
 
 	friend QByteArray& operator>> (QByteArray&, Rational&);
-	friend QString& operator<< (QString&, Rational&);
+	friend QString& operator<< (QString&,const Rational&);
 
 	double decimal() const { return (double)upNum / downNum; }
 	QString ToQString();

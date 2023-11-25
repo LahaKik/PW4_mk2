@@ -1,4 +1,6 @@
 #include "ServerApp.h"
+#include "Matrix.h"
+#include "SquareMatrix.h"
 
 ServerApp::ServerApp(int argc, char** argv) : QCoreApplication(argc, argv)
 {
@@ -147,14 +149,14 @@ void ServerApp::recieve(QByteArray msg)
 				if (height == width)
 				{
 					Rational* rez = CalcDeterminantAndRank<Rational>(msg, width);
-					answer << QString().setNum(DETERMINANT_ANSWER) << QString().setNum(rez[0].decimal());
+					answer << QString().setNum(DETERMINANT_ANSWER) << QString().setNum(RATIONAL) << QString().setNum(rez[0].decimal());
 					answer << QString().setNum((rez[1].decimal()));
 					delete[] rez;
 				}
 				else
 				{
 					int rez = CalcRank<Rational>(msg, height, width);
-					answer << QString().setNum(DETERMINANT_ANSWER) << QString().setNum(rez);
+					answer << QString().setNum(DETERMINANT_ANSWER) << QString().setNum(RATIONAL) << QString().setNum(rez);
 				}
 				break;
 
@@ -162,14 +164,14 @@ void ServerApp::recieve(QByteArray msg)
 				if (height == width)
 				{
 					double* rez = CalcDeterminantAndRank<double>(msg, width);
-					answer << QString().setNum(DETERMINANT_ANSWER) << QString().setNum(rez[0]);
+					answer << QString().setNum(DETERMINANT_ANSWER) << QString().setNum(REAL) << QString().setNum(rez[0]);
 					answer << QString().setNum((rez[1]));
 					delete[] rez;
 				}
 				else
 				{
 					int rez = CalcRank<double>(msg, height, width);
-					answer << QString().setNum(DETERMINANT_ANSWER) << QString().setNum(rez);
+					answer << QString().setNum(DETERMINANT_ANSWER) << QString().setNum(REAL) << QString().setNum(rez);
 				}
 				break;
 
@@ -177,14 +179,14 @@ void ServerApp::recieve(QByteArray msg)
 				if (height == width)
 				{
 					TComplex* rez = CalcDeterminantAndRank<TComplex>(msg, width);
-					answer << QString().setNum(DETERMINANT_ANSWER) << QString().setNum(rez[0].re) << QString().setNum(rez[0].im);
+					answer << QString().setNum(DETERMINANT_ANSWER) << QString().setNum(COMPLEX) << QString().setNum(rez[0].re) << QString().setNum(rez[0].im);
 					answer << QString().setNum((rez[1].re)) << QString().setNum(rez[1].im);
 					delete[] rez;
 				}
 				else
 				{
 					int rez = CalcRank<TComplex>(msg, height, width);
-					answer << QString().setNum(DETERMINANT_ANSWER) << QString().setNum(rez);
+					answer << QString().setNum(DETERMINANT_ANSWER) << QString().setNum(COMPLEX) << QString().setNum(rez);
 				}
 				break;
 			default:
@@ -199,13 +201,13 @@ void ServerApp::recieve(QByteArray msg)
 			switch (typeNum)
 			{
 			case RATIONAL:
-				answer << QString().setNum(TRANSPOSE_ANSWER) << QString().setNum(width) << QString().setNum(height) << Transpose<Rational>(msg, height, width);
+				answer << QString().setNum(TRANSPOSE_ANSWER) << QString().setNum(RATIONAL) << QString().setNum(width) << QString().setNum(height) << Transpose<Rational>(msg, height, width);
 				break;
 			case REAL:
-				answer << QString().setNum(TRANSPOSE_ANSWER) << QString().setNum(width) << QString().setNum(height) << Transpose<double>(msg, height, width);
+				answer << QString().setNum(TRANSPOSE_ANSWER) << QString().setNum(REAL) << QString().setNum(width) << QString().setNum(height) << Transpose<double>(msg, height, width);
 				break;
 			case COMPLEX:
-				answer << QString().setNum(TRANSPOSE_ANSWER) << QString().setNum(width) << QString().setNum(height) << Transpose<TComplex>(msg, height, width);
+				answer << QString().setNum(TRANSPOSE_ANSWER) << QString().setNum(COMPLEX) << QString().setNum(width) << QString().setNum(height) << Transpose<TComplex>(msg, height, width);
 				break;
 			default:
 				break;

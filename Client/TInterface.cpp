@@ -54,10 +54,10 @@ TInterface::TInterface(uint height, uint width, QWidget* parent) : height(height
     TransposeBut->setGeometry((40 * width) * Scale, 40 * Scale, 50 * Scale, 30 * Scale);
 
     DeterminantLabel = new QLabel("Determinant:", this);
-    DeterminantLabel->setGeometry(15 * Scale, (40 * height + 20) * Scale, 90 * Scale, 20 * Scale);
+    DeterminantLabel->setGeometry(10 * Scale, (40 * height + 20) * Scale, 90 * Scale, 20 * Scale);
 
     RankLabel = new QLabel("Rank:", this);
-    RankLabel->setGeometry(15 * Scale, (40 * height) * Scale, 30 * Scale, 20 * Scale);
+    RankLabel->setGeometry(10 * Scale, (40 * height) * Scale, 30 * Scale, 20 * Scale);
 
     RationalNum = new QRadioButton("Rational", this);
     RationalNum->setGeometry((40 * width) * Scale, 70 * Scale, 50 * Scale, 15 * Scale);
@@ -146,7 +146,7 @@ void TInterface::RedrowFilds()
             {
                 LEditArr[i][j][0]->show();
                 LEditArr[i][j][1]->hide();
-                LEditArr[i][j][0]->setGeometry((30 * j + 10) * Scale, (40 * i + 10) * Scale, 15 * Scale, 15 * Scale);
+                LEditArr[i][j][0]->setGeometry((30 * j + 10) * Scale, (40 * i + 10) * Scale, 25 * Scale, 15 * Scale);
                 LEditArr[i][j][1]->setGeometry((30 * j + 10) * Scale, (40 * i + 25) * Scale, 15 * Scale, 15 * Scale);
                 if (i >= height || j >= width)
                 {
@@ -165,6 +165,7 @@ void TInterface::RedrowFilds()
                 LEditArr[i][j][0]->show();
                 LEditArr[i][j][1]->hide();
                 LEditArr[i][j][0]->setGeometry((30 * j + 10) * Scale, (40 * i + 10) * Scale, 29 * Scale, 15 * Scale);
+                LEditArr[i][j][1]->setGeometry((30 * j + 10) * Scale, (40 * i + 10) * Scale, 29 * Scale, 15 * Scale);
                 if (i >= height || j >= width)
                 {
                     LEditArr[i][j][0]->hide();
@@ -178,20 +179,94 @@ void TInterface::reception(QString str)
 {
     qDebug() << str;
     int message;
+    int AnsTypeNum;
     str >> message;
+    str >> AnsTypeNum;
+    if (AnsTypeNum != typeNum)
+        return;
     switch (message)
     {
     case DETERMINANT_ANSWER:
     {
         if(height == width)
         {
-            double det;
-            int rank;
-            str >> det;
-            str >> rank;
+            switch (typeNum)
+            {
+            case RATIONAL:
+            {
+                double det;
+                int rank;
+                str >> det;
+                str >> rank;
 
-            DeterminantLabel->setText("Determinant:" + QString::fromStdString(std::to_string(det)));
-            RankLabel->setText("Rank:" + QString::fromStdString(std::to_string(rank)));
+                DeterminantLabel->setText("Determinant:" + QString::fromStdString(std::to_string(det)));
+                RankLabel->setText("Rank:" + QString::fromStdString(std::to_string(rank)));
+                break;
+            }
+            case REAL:
+            {
+                double det;
+                int rank;
+                str >> det;
+                str >> rank;
+                if(det == (int)det)
+                    DeterminantLabel->setText("Determinant:" + QString::fromStdString(std::to_string((int)det)));
+                else
+                    DeterminantLabel->setText("Determinant:" + QString::fromStdString(std::to_string(det)));
+                RankLabel->setText("Rank:" + QString::fromStdString(std::to_string(rank)));
+                break;
+            }
+            case COMPLEX:
+            {
+                double DetRe;
+                double DetIm;
+                int Rank;
+                str >> DetRe;
+                str >> DetIm;
+                str >> Rank;
+                if (DetRe == (int)DetRe && DetIm == (int)DetIm)
+                {
+                    if (DetIm > 0)
+                        DeterminantLabel->setText("Determinant:" + QString::fromStdString(std::to_string((int)DetRe) + "+" + std::to_string((int)DetIm) + "i"));
+                    else if (DetIm == 0)
+                        DeterminantLabel->setText("Determinant:" + QString::fromStdString(std::to_string((int)DetRe)));
+                    else
+                        DeterminantLabel->setText("Determinant:" + QString::fromStdString(std::to_string((int)DetRe) + std::to_string((int)DetIm) + "i"));
+                }
+                else if (DetRe == (int)DetRe && DetIm != (int)DetIm)
+                {
+                    if (DetIm > 0)
+                        DeterminantLabel->setText("Determinant:" + QString::fromStdString(std::to_string((int)DetRe) + "+" + std::to_string(DetIm) + "i"));
+                    else if (DetIm == 0)
+                        DeterminantLabel->setText("Determinant:" + QString::fromStdString(std::to_string((int)DetRe)));
+                    else
+                        DeterminantLabel->setText("Determinant:" + QString::fromStdString(std::to_string((int)DetRe) + std::to_string(DetIm) + "i"));
+                }
+                else if (DetRe != (int)DetRe && DetIm == (int)DetIm)
+                {
+                    if (DetIm > 0)
+                        DeterminantLabel->setText("Determinant:" + QString::fromStdString(std::to_string(DetRe) + "+" + std::to_string((int)DetIm) + "i"));
+                    else if (DetIm == 0)
+                        DeterminantLabel->setText("Determinant:" + QString::fromStdString(std::to_string(DetRe)));
+                    else
+                        DeterminantLabel->setText("Determinant:" + QString::fromStdString(std::to_string(DetRe) + std::to_string((int)DetIm) + "i"));
+                }
+                else
+                {
+                    if (DetIm > 0)
+                        DeterminantLabel->setText("Determinant:" + QString::fromStdString(std::to_string(DetRe) + "+" + std::to_string(DetIm) + "i"));
+                    else if (DetIm == 0)
+                        DeterminantLabel->setText("Determinant:" + QString::fromStdString(std::to_string(DetRe)));
+                    else
+                        DeterminantLabel->setText("Determinant:" + QString::fromStdString(std::to_string(DetRe) + std::to_string(DetIm) + "i"));
+                }
+                RankLabel->setText("Rank:" + QString::fromStdString(std::to_string(Rank)));
+                break;
+            }
+            default:
+                break;
+            }
+
         }
         else
         {
@@ -208,27 +283,120 @@ void TInterface::reception(QString str)
         int Width;
         str >> Height;
         str >> Width;
-        for (uint i = 0; i < ((width > height) ? width : height); i++)
+        switch (AnsTypeNum)
         {
-            for (uint j = 0; j < ((width > height) ? width : height); j++)
+        case RATIONAL:
+        {
+            for (uint i = 0; i < ((width > height) ? width : height); i++)
             {
-                LEditArr[i][j][0]->show();
-                LEditArr[i][j][1]->show();
-                if (i < Height && j < Width)
+                for (uint j = 0; j < ((width > height) ? width : height); j++)
                 {
-                    int tmpUP;
-                    int tmpDOWN;
-                    str >> tmpUP;
-                    str >> tmpDOWN;
-                    LEditArr[i][j][0]->setText(QString::fromStdString(std::to_string(tmpUP)));
-                    LEditArr[i][j][1]->setText(QString::fromStdString(std::to_string(tmpDOWN)));
-                }
-                else
-                {
-                    LEditArr[i][j][0]->hide();
-                    LEditArr[i][j][1]->hide();
+                    LEditArr[i][j][0]->show();
+                    LEditArr[i][j][1]->show();
+                    if (i < Height && j < Width)
+                    {
+                        int tmpUP;
+                        int tmpDOWN;
+                        str >> tmpUP;
+                        str >> tmpDOWN;
+                        LEditArr[i][j][0]->setText(QString::fromStdString(std::to_string(tmpUP)));
+                        LEditArr[i][j][1]->setText(QString::fromStdString(std::to_string(tmpDOWN)));
+                    }
+                    else
+                    {
+                        LEditArr[i][j][0]->hide();
+                        LEditArr[i][j][1]->hide();
+                    }
                 }
             }
+            break;
+        }
+        case REAL:
+        {
+            for (uint i = 0; i < ((width > height) ? width : height); i++)
+            {
+                for (uint j = 0; j < ((width > height) ? width : height); j++)
+                {
+                    LEditArr[i][j][0]->show();
+                    LEditArr[i][j][1]->hide();
+                    if (i < Height && j < Width)
+                    {
+                        double tmpNum;
+                        str >> tmpNum;
+                        if(tmpNum == (int)tmpNum)
+                            LEditArr[i][j][0]->setText(QString::fromStdString(std::to_string((int)tmpNum)));
+                        else
+                            LEditArr[i][j][0]->setText(QString::fromStdString(std::to_string(tmpNum)));
+                    }
+                    else
+                    {
+                        LEditArr[i][j][0]->hide();
+                    }
+                }
+            }
+            break;
+        }
+        case COMPLEX:
+        {
+            for (uint i = 0; i < ((width > height) ? width : height); i++)
+            {
+                for (uint j = 0; j < ((width > height) ? width : height); j++)
+                {
+                    LEditArr[i][j][0]->show();
+                    LEditArr[i][j][1]->hide();
+                    if (i < Height && j < Width)
+                    {
+                        double tmpRe;
+                        double tmpIm;
+                        str >> tmpRe;
+                        str >> tmpIm;
+                        if(tmpRe == (int)tmpRe && tmpIm == (int)tmpIm)
+                        {
+                            if (tmpIm > 0)
+                                LEditArr[i][j][0]->setText(QString::fromStdString(std::to_string((int)tmpRe) + "+" + std::to_string((int)tmpIm) + "i"));
+                            else if (tmpIm == 0)
+                                LEditArr[i][j][0]->setText(QString::fromStdString(std::to_string((int)tmpRe)));
+                            else
+                                LEditArr[i][j][0]->setText(QString::fromStdString(std::to_string((int)tmpRe) + std::to_string((int)tmpIm) + "i"));
+                        }
+                        else if (tmpRe == (int)tmpRe && tmpIm != (int)tmpIm)
+                        {
+                            if (tmpIm > 0)
+                                LEditArr[i][j][0]->setText(QString::fromStdString(std::to_string((int)tmpRe) + "+" + std::to_string(tmpIm) + "i"));
+                            else if (tmpIm == 0)
+                                LEditArr[i][j][0]->setText(QString::fromStdString(std::to_string((int)tmpRe)));
+                            else
+                                LEditArr[i][j][0]->setText(QString::fromStdString(std::to_string((int)tmpRe) + std::to_string(tmpIm) + "i"));
+                        }
+                        else if (tmpRe != (int)tmpRe && tmpIm == (int)tmpIm)
+                        {
+                            if (tmpIm > 0)
+                                LEditArr[i][j][0]->setText(QString::fromStdString(std::to_string(tmpRe) + "+" + std::to_string((int)tmpIm) + "i"));
+                            else if (tmpIm == 0)
+                                LEditArr[i][j][0]->setText(QString::fromStdString(std::to_string(tmpRe)));
+                            else
+                                LEditArr[i][j][0]->setText(QString::fromStdString(std::to_string(tmpRe) + std::to_string((int)tmpIm) + "i"));
+                        }
+                        else
+                        {
+                            if (tmpIm > 0)
+                                LEditArr[i][j][0]->setText(QString::fromStdString(std::to_string(tmpRe) + "+" + std::to_string(tmpIm) + "i"));
+                            else if (tmpIm == 0)
+                                LEditArr[i][j][0]->setText(QString::fromStdString(std::to_string(tmpRe)));
+                            else
+                                LEditArr[i][j][0]->setText(QString::fromStdString(std::to_string(tmpRe) + std::to_string(tmpIm) + "i"));
+                        }
+                    }
+                    else
+                    {
+                        LEditArr[i][j][0]->hide();
+                    }
+                }
+            }
+            break;
+        }
+        default:
+            break;
         }
         height = Height;
         width = Width;
@@ -237,11 +405,18 @@ void TInterface::reception(QString str)
         TransposeBut->setGeometry((40 * width) * Scale, 40 * Scale, 50 * Scale, 30 * Scale);
         DeterminantLabel->setGeometry(15 * Scale, (40 * height + 20) * Scale, 90 * Scale, 20 * Scale);
         RankLabel->setGeometry(15 * Scale, (40 * height) * Scale, 30 * Scale, 20 * Scale);
+        RationalNum->setGeometry((40 * width) * Scale, 70 * Scale, 50 * Scale, 10 * Scale);
+        RealNum->setGeometry((40 * width) * Scale, 85 * Scale, 50 * Scale, 10 * Scale);
+        ComplexNum->setGeometry((40 * width) * Scale, 100 * Scale, 50 * Scale, 10 * Scale);
         break;
     }
     case ERROR_MESSAGE:
     {
         qDebug() << "server error";
+        QMessageBox warning = QMessageBox(this);
+        warning.setText("Server returns error, check that the input is correct");
+        warning.exec();
+        return;
         break;
     }
     default:
@@ -264,13 +439,72 @@ void TInterface::formRequest()
     msg << QString().setNum(typeNum);
     msg << QString().setNum(height);
     msg << QString().setNum(width);
-    for (uint i = 0; i < height; i++)
+    switch (typeNum)
     {
-        for (uint j = 0; j < width; j++)
+    case RATIONAL:
+    {
+        for (uint i = 0; i < height; i++)
         {
-            msg << LEditArr[i][j][0]->text();
-            msg << LEditArr[i][j][1]->text();
+            for (uint j = 0; j < width; j++)
+            {
+                msg << LEditArr[i][j][0]->text();
+                msg << LEditArr[i][j][1]->text();
+            }
         }
+        break;
+    }
+    case REAL:
+    {
+        for (uint i = 0; i < height; i++)
+        {
+            for (uint j = 0; j < width; j++)
+            {
+                msg << LEditArr[i][j][0]->text();
+            }
+        }
+        break;
+    }
+    case COMPLEX:
+    {
+        for (uint i = 0; i < height; i++)
+        {
+            for (uint j = 0; j < width; j++)
+            {
+                int indPlus = LEditArr[i][j][0]->text().indexOf("+");
+                int indMinus = LEditArr[i][j][0]->text().indexOf("-");
+                int indI = LEditArr[i][j][0]->text().indexOf("i");
+                if(indPlus > 0 && indMinus <= 0 )
+                {
+                    msg << LEditArr[i][j][0]->text().left(indPlus) << LEditArr[i][j][0]->text().mid(indPlus + 1, indI - indPlus - 1);
+                }
+                else if (indPlus == -1 && indMinus == 0)
+                {
+                    indMinus = LEditArr[i][j][0]->text().indexOf("-", indMinus + 1);
+                    if (indMinus != -1)
+                        msg << LEditArr[i][j][0]->text().left(indMinus) << LEditArr[i][j][0]->text().mid(indMinus, indI - indMinus);
+                    else if (indI != -1)
+                        msg << QString().setNum(0) << LEditArr[i][j][0]->text().left(indI);
+                    else
+                        msg << LEditArr[i][j][0]->text() << QString().setNum(0);
+                }
+                else if (indPlus == -1 && indMinus > 0)
+                {
+                    msg << LEditArr[i][j][0]->text().left(indMinus) << LEditArr[i][j][0]->text().mid(indMinus, indI - indMinus);
+                }
+                else if (indPlus == -1 && indMinus == -1 && indI != -1)
+                {
+                    msg << QString().setNum(0) << LEditArr[i][j][0]->text().left(indI);
+                }
+                else
+                {
+                    msg << LEditArr[i][j][0]->text();
+                }
+            }
+        }
+        break;
+    }
+    default:
+        break;
     }
     emit request(msg);
 }
@@ -310,6 +544,8 @@ void AdditionalInterface::Confirm()
     height = HeightValue->text().toUInt();
     width = WidthValue->text().toUInt();
 
+    fc->close();
+    delete fc;
     fc = new TInterface(height, width);
     emit ChangedSize(fc);
     fc->show();

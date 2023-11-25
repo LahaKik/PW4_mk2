@@ -31,3 +31,4 @@ QString& operator>> (QString&, double&);
 QByteArray& operator>> (QByteArray&, int&);
 QByteArray& operator>> (QByteArray&, double&);
 
+QString& operator << (QString&,const double&);

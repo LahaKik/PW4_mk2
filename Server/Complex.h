@@ -152,6 +152,6 @@ public:
 	}
 
 	friend QByteArray& operator>> (QByteArray&, TComplex&);
-	friend QString& operator<< (QString&, TComplex&);
+	friend QString& operator<< (QString&, const TComplex&);
 	QString ToQString();
 };

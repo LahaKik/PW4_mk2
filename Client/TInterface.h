@@ -18,7 +18,7 @@ class TInterface :
     QRadioButton* RationalNum, * RealNum, * ComplexNum;
     uint height;
     uint width;
-    const float Scale = 1.5;
+    const float Scale = 1.75;
     TypeNum typeNum = RATIONAL;
 
 public:

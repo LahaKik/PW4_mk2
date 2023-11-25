@@ -112,7 +112,7 @@ QByteArray& operator>> (QByteArray& arr, Rational& num)
 	return arr;
 }
 
-QString& operator<< (QString& str, Rational& num)
+QString& operator<< (QString& str, const Rational& num)
 {
 	str.append(QString().setNum(num.upNum));
 	str.append(TMessageSeparator);

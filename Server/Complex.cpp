@@ -27,7 +27,7 @@ QByteArray& operator>> (QByteArray& arr, TComplex& num)
 	return arr;
 }
 
-QString& operator<< (QString& str, TComplex& num)
+QString& operator<< (QString& str, const TComplex& num)
 {
 	str.append(QString().setNum(num.re));
 	str.append(TMessageSeparator);

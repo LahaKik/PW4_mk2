@@ -25,7 +25,17 @@ public:
 	int ComputeRank();
 	void SetTransposed();
 	//virtual QString ToQString();
-	friend QString& operator<< (QString&, Matrix<number>&);
+	friend QString& operator<< (QString& str, const Matrix<number>& matrix) 
+	{
+		for (uint i = 0; i < matrix.height; i++)
+		{
+			for (uint j = 0; j < matrix.width; j++)
+			{
+				str << matrix.values[i][j];
+			}
+		}
+		return str;
+	}
 
 };
 
@@ -149,7 +159,6 @@ void Matrix<number>::applyGaussMethod()
 			{
 				number temp = values[k][j] * tmp;
 				values[i][j] += temp;
-
 			}
 		}
 	}
@@ -168,17 +177,4 @@ void Matrix<number>::applyGaussMethod()
 //	}
 //	return rezult;
 //}
-
-template<class number>
-QString& operator<< (QString& str, Matrix<number>& matrix)
-{
-	for (uint i = 0; i < matrix.height; i++)
-	{
-		for (uint j = 0; j < matrix.width; j++)
-		{
-			str << matrix.values[i][j];
-		}
-	}
-	return str;
-}
 
